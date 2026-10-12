@@ -1,34 +1,32 @@
-# changelog-gen
+# code-review
 
-An agent skill that turns git history into a clean, human-readable changelog entry. No more staring at 40 commit messages trying to write release notes.
+An agent skill for structured, no-noise code reviews. Give it a diff, branch, or PR and get findings grouped by severity — blockers first, nits last, zero invented problems.
 
 ## Install
 
 Copy `SKILL.md` into your skills folder, e.g.:
 
-- Claude Code: `~/.claude/skills/changelog-gen/SKILL.md`
-- Cursor: `.cursor/skills/changelog-gen/SKILL.md` (project) or `~/.cursor/skills/` (global)
+- Claude Code: `~/.claude/skills/code-review/SKILL.md`
+- Cursor: `.cursor/skills/code-review/SKILL.md` (project) or `~/.cursor/skills/` (global)
 
-Then ask your agent: "write a changelog entry for the last release" or "summarize what changed since v1.3.0".
+Then ask your agent: "review this PR" or "review my changes before I merge".
 
 ## What it does
 
-1. Reads the commit range (since last tag, or whatever range you give it).
-2. Groups by intent — Added / Fixed / Changed — not by commit.
-3. Merges duplicates, drops noise (merge commits, trivial chores), writes for humans.
-4. Outputs a Markdown section ready to paste under `## [Unreleased]`:
+Three passes in order — **correctness**, **security**, **maintainability** — then reports:
 
-```markdown
-## [1.4.0] - 2026-10-12
+```
+## 🔴 Blockers (must fix)
+- `api/users.ts:42` — missing auth check on DELETE /users/:id …
 
-### Added
-- OAuth2 refresh token rotation (#128)
+## 🟡 Suggestions (consider)
+- …
 
-### Fixed
-- Crash when uploading files over 100MB (#131)
+## 🟢 Nits (optional)
+- …
 ```
 
-Large ranges get themed summaries instead of endless bullet lists.
+Every finding cites a file and line. If the code is clean, it says so in one line instead of inventing issues. Formatting is left to linters.
 
 ## License
 
